@@ -1,2 +1,3 @@
 discord
 ruff
+python-dotenv
