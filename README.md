@@ -24,5 +24,5 @@ Le répertoire est organiser de la manière suivante:
 Cloner le répertoire et installer les dépendances:
 ```bash
 git clone <your-repo-url>
-cd MOZARD-DISCORD-BOT
+cd MODIBO-Music
 pip install -r requirements.txt
