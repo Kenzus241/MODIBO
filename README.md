@@ -1,10 +1,10 @@
-# Mozard discord
+# MODIBO (Mozard discord Bot)
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
 [![Linting: ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 ## 📖 Résumer du Projet
-le but du projet **MOZARD DISCORD** est de créer un bot discord qui lance de la musique dépendant des commande taper par l'utilisateur
+le but du projet **MODIBO** est de créer un bot discord qui lance de la musique dépendant des commande taper par l'utilisateur
 
 ## 🛠️ Technical Stack
 Le projet est développer en **Python** en utilisant les librairies suivante:
@@ -16,7 +16,7 @@ Le répertoire est organiser de la manière suivante:
 
 | File | Description |
 | :--- | :--- |
-| `mozard.py` | main fonction du projet|
+| `MODIBO.py` | main fonction du projet|
 
 ## 🚀 Installation and Usage
 
