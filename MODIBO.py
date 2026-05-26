@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from discord.ext import commands
 from discord import app_commands
 import yt_dlp
+from discord.ext import tasks
 import asyncio
 load_dotenv()
 
@@ -33,13 +34,35 @@ FFMPEG_OPTIONS = {
     'options': '-vn',
 }
 
+inactivity_counts = {}
 
 #Déclaration des fonctions
+
+@tasks.loop(minutes=1)
+
+async def check_inactivity():
+    for guild in bot.guilds:
+        vc = guild.voice_client
+
+        if vc:
+            if not vc.is_playing() and not vc.is_paused():
+                inactivity_counts[guild.id] = inactivity_counts.get(guild.id, 0) + 1
+
+                if inactivity_counts[guild.id] >= 6:
+                    await vc.disconnect()
+                    print(f"Déconnection pour inactivité {guild.name}")
+                    inactivity_counts[guild.id] = 0
+            else:
+                inactivity_counts[guild.id] = 0
 
 @bot.event
 
 async def on_ready():
     print(f"Connecté en tant que {bot.user.name}")
+
+    if not check_inactivity.is_running():
+        check_inactivity.start()
+
     try:
         syncro = await bot.tree.sync()
         print(f"Synchro locale réussie : {len(syncro)} commandes.")
@@ -75,6 +98,9 @@ async def play_music(interaction: discord.Interaction, recherche: str):
     if vc.is_playing():
         vc.stop()
 
+    audio_source = discord.FFmpegPCMAudio(url, **FFMPEG_OPTIONS)
+ 
+    source = discord.PCMVolumeTransformer(audio_source, volume=0.5)
     source = await discord.FFmpegOpusAudio.from_probe(url, **FFMPEG_OPTIONS)
     vc.play(source)
 
