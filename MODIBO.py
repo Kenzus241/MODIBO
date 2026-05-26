@@ -41,6 +41,9 @@ inactivity_counts = {}
 @tasks.loop(minutes=1)
 
 async def check_inactivity():
+    '''
+    la fonction qui vérifie l'inactivité du bot
+    '''
     for guild in bot.guilds:
         vc = guild.voice_client
 
@@ -58,6 +61,9 @@ async def check_inactivity():
 @bot.event
 
 async def on_ready():
+    '''
+    la fonction qui initialise le lancement du bot
+    '''
     print(f"Connecté en tant que {bot.user.name}")
 
     if not check_inactivity.is_running():
@@ -75,6 +81,11 @@ async def on_ready():
 @app_commands.describe(recherche="Le nom de la musique ou le lien YouTube")
 
 async def play_music(interaction: discord.Interaction, recherche: str):
+    '''
+    la fonction principal qui lance la recherche et initialise le lancement de la musique
+        @interaction: permet l'interaction avec l'utilisateur
+        @recherche: la recherche éffectuer par l'utilisateur
+    '''
     if interaction.user.voice is None:
         return await interaction.response.send_message("Tu dois être dans un salon vocal pour ça !")
     await interaction.response.defer()
@@ -85,13 +96,32 @@ async def play_music(interaction: discord.Interaction, recherche: str):
     else:
         vc = interaction.guild.voice_client
 
+    recherche_amelioree = f"ytsearch5:{recherche} audio"
+
     with yt_dlp.YoutubeDL(YDL_OPTIONS) as ydl:
         try:
-            info = ydl.extract_info(recherche, download=False)
+            info = ydl.extract_info(recherche_amelioree, download=False)
+            
             if 'entries' in info:
-                info = info['entries'][0]
-            url = info['url']
-            titre = info['title']
+                video_choisie = None
+                
+                for entry in info['entries']:
+                    est_musique = entry.get('categories') and 'Music' in entry['categories']
+                    duree_valide = entry.get('duration') and entry['duration'] < 600
+                    
+                    if est_musique and duree_valide:
+                        video_choisie = entry
+                        break
+
+                if not video_choisie:
+                    if info['entries'][0].get('duration', 0) < 600:
+                        video_choisie = info['entries'][0]
+                    else:
+                        return await interaction.followup.send("❌ n'est pas une vidéo")
+
+            url = video_choisie['url']
+            titre = video_choisie['title']
+
         except Exception as e:
             return await interaction.followup.send(f"Erreur lors de la recherche : {e}")
 
@@ -105,7 +135,7 @@ async def play_music(interaction: discord.Interaction, recherche: str):
     vc.play(source)
 
 
-    await interaction.followup.send(f"🎶 **{titre}** 🎶")
+    await interaction.followup.send(f"🎶 **{titre} \nduration: {info['entries'][0].get('duration', 0)}** 🎶")
 
 
 0##LANCEMENT DU BOT
