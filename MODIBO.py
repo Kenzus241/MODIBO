@@ -135,7 +135,7 @@ async def play_music(interaction: discord.Interaction, recherche: str):
     vc.play(source)
 
 
-    await interaction.followup.send(f"🎶 **{titre} \nduration: {info['entries'][0].get('duration', 0)}** 🎶")
+    await interaction.followup.send(f"🎶 **{titre} \nduration: {info['entries'][0].get('duration', 0) / 60: .2f} min** 🎶")
 
 
 0##LANCEMENT DU BOT
