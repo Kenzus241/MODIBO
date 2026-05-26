@@ -17,6 +17,8 @@ Le répertoire est organiser de la manière suivante:
 | File | Description |
 | :--- | :--- |
 | `MODIBO.py` | main fonction du projet|
+| `README` | le fichier d'information du Projet|
+| `requirements.txt` | le ficheir avec toute les dépendances à installer pour que le projet fonctionne|
 
 ## 🚀 Installation and Usage
 
