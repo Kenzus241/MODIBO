@@ -6,7 +6,6 @@ from discord.ext import commands
 from discord import app_commands
 import yt_dlp
 from discord.ext import tasks
-import asyncio
 load_dotenv()
 
 ##INITIALIASTION DU BOT
@@ -27,6 +26,7 @@ YDL_OPTIONS = {
     'noplaylist': True,
     'quiet': True,
     'default_search': 'ytsearch',
+    'ignoreerrors': True,
 }
 
 FFMPEG_OPTIONS = {
@@ -35,6 +35,8 @@ FFMPEG_OPTIONS = {
 }
 
 inactivity_counts = {}
+
+queues = {}
 
 #Déclaration des fonctions
 
@@ -106,6 +108,8 @@ async def play_music(interaction: discord.Interaction, recherche: str):
                 video_choisie = None
                 
                 for entry in info['entries']:
+                    if entry is None:
+                        continue
                     est_musique = entry.get('categories') and 'Music' in entry['categories']
                     duree_valide = entry.get('duration') and entry['duration'] < 600
                     
@@ -114,10 +118,10 @@ async def play_music(interaction: discord.Interaction, recherche: str):
                         break
 
                 if not video_choisie:
-                    if info['entries'][0].get('duration', 0) < 600:
-                        video_choisie = info['entries'][0]
-                    else:
-                        return await interaction.followup.send("❌ n'est pas une vidéo")
+                    for entry in info['entries']:
+                        if entry is not None and entry.get('duration', 0) < 600:
+                            video_choisie = entry
+                            break
 
             url = video_choisie['url']
             titre = video_choisie['title']
