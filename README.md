@@ -4,7 +4,7 @@
 [![Linting: ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 ## 📖 Résumer du Projet
-le but du projet **MODIBO** est de créer un bot discord qui lance de la musique dépendant des commande taper par l'utilisateur
+le but du projet **MODIBO** est de créer un bot discord qui lance de la musique dépendant des commande tapé par l'utilisateur
 
 ## 🛠️ Technical Stack
 Le projet est développer en **Python** en utilisant les librairies suivante:
